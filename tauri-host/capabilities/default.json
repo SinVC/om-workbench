@@ -1,0 +1,28 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "主工作台窗口的默认最小权限集；新增命令或插件须在此显式授权。",
+  "windows": ["main"],
+  "permissions": [
+    "core:event:allow-listen",
+    "core:event:allow-unlisten",
+    "core:window:allow-start-dragging",
+    "core:window:allow-internal-toggle-maximize",
+    "allow-records-query",
+    "allow-records-batch",
+    "allow-assets-import",
+    "allow-assets-get",
+    "allow-assets-delete",
+    "allow-config-get",
+    "allow-config-update",
+    "allow-config-reset",
+    "allow-backup-export",
+    "allow-backup-validate",
+    "allow-backup-restore",
+    "allow-backup-clear",
+    "allow-window-state",
+    "allow-window-apply",
+    "allow-window-control",
+    "allow-workspace-reload"
+  ]
+}

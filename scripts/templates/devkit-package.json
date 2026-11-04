@@ -1,0 +1,37 @@
+{
+  "name": "om-workbench-devkit",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "web-workbench"
+  ],
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "start": "runner\\tauri-host.exe --workspace web-workbench/dist",
+    "dev": "npm run dev -w web-workbench",
+    "build": "npm run build -w web-workbench",
+    "build:watch": "npm run build:watch -w web-workbench",
+    "preview": "npm run preview -w web-workbench",
+    "typecheck": "tsc -p tsconfig.json && npm run typecheck -w web-workbench",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "check": "npm run typecheck && npm run lint && npm run format:check",
+    "test": "npm run test -w web-workbench"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.13.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.7",
+    "globals": "^17.13.0",
+    "jiti": "^2.7.0",
+    "prettier": "^3.9.10",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.72.1"
+  }
+}

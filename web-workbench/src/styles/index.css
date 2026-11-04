@@ -1,0 +1,6 @@
+/* Active design pack.
+ *
+ * Swiss International Style — flat, terracotta, 2px geometry.
+ * Switch with `npm run design:swiss` / `npm run design:kairos`, then rebuild.
+ */
+@import './swiss/global.css';

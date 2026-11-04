@@ -1,0 +1,30 @@
+[package]
+name = "tauri-host"
+version = "0.1.0"
+description = "Personal workbench desktop host"
+edition = "2021"
+rust-version = "1.88"
+publish = false
+
+[lib]
+# 加 _lib 后缀以避免 Windows 下 bin 与 lib 产物同名冲突。
+name = "tauri_host_lib"
+
+[features]
+custom-protocol = ["tauri/custom-protocol"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tauri-plugin-sql = { version = "2", features = ["sqlite"] }
+sqlx = { version = "0.8", default-features = false, features = ["runtime-tokio", "sqlite", "json"] }
+tokio = { version = "1", features = ["sync", "time"] }
+uuid = { version = "1", features = ["v4"] }
+percent-encoding = "2"
+mime_guess = "2"
+image = { version = "0.25", default-features = false, features = ["png", "jpeg", "webp", "gif"] }
+tempfile = "3"

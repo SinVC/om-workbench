@@ -1,0 +1,1 @@
+F:/00_Workspace/App_Development/personal-workspace/AGENTS.md

@@ -1,0 +1,11 @@
+dist
+target
+.shots
+package-lock.json
+tauri-host/gen
+tauri-host/icons
+dev-doc
+references
+.agents
+.claude
+*.md

@@ -1,0 +1,131 @@
+:root {
+  /* ------------------------------------------------------------------
+     KAIROS — warm graphite, bone ink, one signal colour.
+     Dark theme is the default; the light theme is warm paper, not white.
+     ------------------------------------------------------------------ */
+  --font-sans:
+    'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI Variable Text',
+    'Segoe UI', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+  --font-display:
+    'Space Grotesk', 'Inter Variable', 'Segoe UI Variable Display', 'Segoe UI', 'PingFang SC',
+    'Microsoft YaHei', sans-serif;
+  --font-mono:
+    'IBM Plex Mono', ui-monospace, 'Cascadia Mono', 'SFMono-Regular', Consolas, 'Liberation Mono',
+    monospace;
+
+  --bg-workbench: #0c0c0b;
+  --bg-surface: #111110;
+  --bg-surface-elevated: #171715;
+  --bg-surface-hover: #1c1c19;
+  --bg-muted: #131312;
+
+  --border-subtle: rgba(240, 236, 227, 0.09);
+  --border-strong: rgba(240, 236, 227, 0.18);
+  --border-focus: #f1ede4;
+  --outline: rgba(240, 236, 227, 0.26);
+
+  --text-primary: #f1ede4;
+  --text-secondary: #b0aa9d;
+  --text-muted: #827d70;
+
+  /* Primary actions and the hero figure sit in a warm clay that belongs to
+     the paper/graphite family instead of pure white or black. */
+  --primary-bg: #b3866c;
+  --primary-bg-hover: #c3977d;
+  --primary-ink: #15100d;
+  --display-ink: #c99b80;
+  --accent-primary: var(--primary-bg);
+  --accent-hover: var(--primary-bg-hover);
+  --accent-surface: rgba(241, 237, 228, 0.07);
+  --accent-ink: var(--primary-ink);
+
+  --signal: #ff4b2b;
+  --signal-soft: rgba(255, 75, 43, 0.1);
+  --signal-line: rgba(255, 75, 43, 0.42);
+
+  --color-overdue: #ff5533;
+  --color-overdue-bg: rgba(255, 75, 43, 0.07);
+  --color-overdue-border: rgba(255, 75, 43, 0.34);
+
+  --color-revenue: #b4c78c;
+  --color-revenue-bg: rgba(180, 199, 140, 0.08);
+  --color-revenue-border: rgba(180, 199, 140, 0.32);
+
+  --color-warning: #dda94f;
+  --color-warning-bg: rgba(221, 169, 79, 0.08);
+
+  --color-p0: #ff5533;
+  --color-p1: #dda94f;
+  --color-p2: #93a7ba;
+
+  --heat-1: rgba(180, 199, 140, 0.18);
+  --heat-2: rgba(180, 199, 140, 0.36);
+  --heat-3: rgba(180, 199, 140, 0.58);
+  --heat-4: #b4c78c;
+  --heat-0: rgba(241, 237, 228, 0.055);
+
+  --radius-lg: 3px;
+  --radius-md: 2px;
+  --radius-sm: 2px;
+  --radius-full: 9999px;
+
+  --shadow-sm: none;
+  --shadow-md: 0 1px 0 rgba(255, 255, 255, 0.03);
+  --shadow-lg: 0 32px 90px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(240, 236, 227, 0.06);
+
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --rule: var(--border-subtle);
+}
+
+[data-theme='light'] {
+  --bg-workbench: #f0ede4;
+  --bg-surface: #f6f3ea;
+  --bg-surface-elevated: #fbf8f0;
+  --bg-surface-hover: #eae6da;
+  --bg-muted: #e9e5d8;
+
+  --border-subtle: rgba(24, 22, 16, 0.11);
+  --border-strong: rgba(24, 22, 16, 0.24);
+  --border-focus: #16140f;
+  --outline: rgba(24, 22, 16, 0.32);
+
+  --text-primary: #16140f;
+  --text-secondary: #57524a;
+  --text-muted: #8a8478;
+
+  --primary-bg: #8b6150;
+  --primary-bg-hover: #75503f;
+  --primary-ink: #f8f4ec;
+  --display-ink: #8b6150;
+  --accent-primary: var(--primary-bg);
+  --accent-hover: var(--primary-bg-hover);
+  --accent-surface: rgba(24, 22, 16, 0.06);
+  --accent-ink: var(--primary-ink);
+
+  --signal: #cf3a19;
+  --signal-soft: rgba(207, 58, 25, 0.08);
+  --signal-line: rgba(207, 58, 25, 0.4);
+
+  --color-overdue: #c8351a;
+  --color-overdue-bg: rgba(207, 58, 25, 0.06);
+  --color-overdue-border: rgba(207, 58, 25, 0.3);
+
+  --color-revenue: #5c7342;
+  --color-revenue-bg: rgba(92, 115, 66, 0.08);
+  --color-revenue-border: rgba(92, 115, 66, 0.3);
+
+  --color-warning: #9a6b18;
+  --color-warning-bg: rgba(154, 107, 24, 0.08);
+
+  --color-p0: #c8351a;
+  --color-p1: #9a6b18;
+  --color-p2: #51667a;
+
+  --heat-1: rgba(92, 115, 66, 0.16);
+  --heat-2: rgba(92, 115, 66, 0.34);
+  --heat-3: rgba(92, 115, 66, 0.56);
+  --heat-4: #5c7342;
+  --heat-0: rgba(24, 22, 16, 0.07);
+
+  --shadow-lg: 0 32px 90px rgba(30, 26, 16, 0.18), 0 0 0 1px rgba(24, 22, 16, 0.08);
+}
