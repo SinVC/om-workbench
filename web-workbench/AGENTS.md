@@ -69,11 +69,11 @@ npm run build
 
 ## 五、开发参考文档索引
 
-随本工程分发了完整的前端开发指南，位于 `web-workbench/docs/`：
+随本工程分发了完整的前端开发指南，位于本文件同级的 `./docs/` 目录。以下链接均相对于本文件，支持在项目内使用或随 `web-workbench/` 文件夹独立分发：
 
-- 🧭 **[指南总览与 Agent 导航](web-workbench/docs/README.md)**：全局体系认知、Agent 作业拓扑与任务查阅索引。
-- 📐 **[运行时公共规范](web-workbench/docs/shared/workbench-runtime-and-conventions.md)**：离线零外链、单一事实源、状态同步、容器自适应与主题设计令牌。
-- 🔌 **[宿主开放能力与前端 SDK 契约](web-workbench/docs/modules/host-and-sdk-interfaces.md)**：`workbench.records` / `assets` / `config` / `window` / `backup` 接口详解与 React Hooks。
-- 🧩 **[前端可复用控件与多视图引擎](web-workbench/docs/modules/reusable-ui-and-views.md)**：基础原语、六视图组件、无头表格、日历与统计图表用法。
-- 🏗️ **[业务模块组装与工作台模板扩展](web-workbench/docs/modules/custom-modules-and-templates.md)**：参考模块结构剖析与 12 大业务域扩展模式。
-- 🖼️ **[工作台内容布局规范](web-workbench/docs/content-layout.md)**：外壳直角铺满、滚动区域分配与外观回归验收基准。
+- 🧭 **[指南总览与 Agent 导航](./docs/README.md)**：全局体系认知、Agent 作业拓扑与任务查阅索引。
+- 📐 **[运行时公共规范](./docs/shared/workbench-runtime-and-conventions.md)**：离线零外链、单一事实源、状态同步、容器自适应与主题设计令牌。
+- 🔌 **[宿主开放能力与前端 SDK 契约](./docs/modules/host-and-sdk-interfaces.md)**：`workbench.records` / `assets` / `config` / `window` / `backup` 接口详解与 React Hooks。
+- 🧩 **[前端可复用控件与多视图引擎](./docs/modules/reusable-ui-and-views.md)**：基础原语、六视图组件、无头表格、日历与统计图表用法。
+- 🏗️ **[业务模块组装与工作台模板扩展](./docs/modules/custom-modules-and-templates.md)**：参考模块结构剖析与 12 大业务域扩展模式。
+- 🖼️ **[工作台内容布局规范](./docs/content-layout.md)**：外壳直角铺满、滚动区域分配与外观回归验收基准。

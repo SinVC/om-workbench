@@ -1,66 +1,79 @@
-# 项目上下文
+# 个人工作台二次开发指南（AI Agent 须知）
 
-## 系统定位
-本仓库是一套本地优先（Local-First）的个人自定义工作台，采用“预编译桌面运行器 + 可编辑前端工作台”的解耦交付范式：
-- `tauri-host`：由平台方编译分发的固定运行器，收敛窗口、存储、附件、网络代理与权限等系统资源。日常业务迭代不重编译宿主。
-- `web-workbench`：客户本机 Agent 持续修改的 React + TypeScript + Vite 工程，构建为离线静态产物后由宿主加载。
+## 一、系统定位与作业边界
 
-设计文档入口为 [dev-doc/README.md](dev-doc/README.md)，工程规范基线见 [技术栈选型与关键架构决策](dev-doc/shared/tech-stack-and-decisions.md)。动手前先读对应模块的下钻文档。
+本工程是一套**本地优先（Local-First）的个人自定义工作台前端工程**（React 19 + TypeScript + Vite）。
+系统采用“预编译桌面运行器 + 可编辑前端工作台”的双层架构：
+- **桌面宿主（固定运行器）**：已预编译放置于 `runner/` 目录中（`runner/tauri-host.exe`）。宿主负责原生桌面窗口管理、SQLite 物理持久化、本地图片托管与原子事务保障。**开发者与 Agent 不需要安装 Rust 工具链，严禁修改或尝试重新编译宿主代码**。
+- **Agent 唯一作业面**：AI Agent 的**唯一作业目录为 `web-workbench/src/`**。你通过编写/修改 React 组件、调用 `workbench.*` SDK 以及调整模板配置，即可完成工作台的定制与全功能扩展。
 
-编写、替换内部 HTML/CSS 或测试窗口外观前，先读[工作台内容布局规范](web-workbench/docs/content-layout.md)；用户模板与测试页面共用该规范。
+---
 
-## 目录拓扑
-| 路径 | 职责 | 设计文档 |
-| :--- | :--- | :--- |
-| `dev-doc/` | 分层设计文档 | — |
-| `references/` | 选型讨论原始材料，只读参考，不作为约束来源 | — |
-| `web-workbench/src/shell/` | 应用壳层、主题令牌、自适应布局 | `dev-doc/web-workbench/build-and-app-shell.md` |
-| `web-workbench/src/sdk/` | `workbench.*` SDK、领域规则、跨视图同步 | `dev-doc/web-workbench/sdk-and-domain-services.md` |
-| `web-workbench/src/ui/` | 多视图投影与开源交互组件底座 | `dev-doc/web-workbench/ui-primitives-and-views.md` |
-| `web-workbench/src/modules/`、`src/templates/` | 业务参考模块与工作台模板 | `dev-doc/web-workbench/templates-and-modules.md` |
-| `tauri-host/src/` | 宿主 Rust 源码（IPC 网关、窗口、存储、网络） | `dev-doc/tauri-host/*.md` |
-| `tauri-host/capabilities/` | 窗口级最小权限声明 | `dev-doc/tauri-host/security-and-extensions.md` |
+## 二、常用开发与验证命令
 
-## 常用命令
-在仓库根目录执行，包管理器统一使用 npm：
-- `npm install`：安装全部 workspace 依赖。
-- `npm run dev`：仅启动前端 Vite 开发服务器。
-- `npm run build` / `npm run build:watch`：单次构建或监听构建前端产物至 `web-workbench/dist/`。
-- `npm run host:dev` / `npm run host:build`：启动宿主开发窗口，或构建宿主安装包（需要 Rust 工具链）。
-- `npm run check`：依次执行类型检查、ESLint 与 Prettier 校验；宿主侧使用 `cargo fmt` 与 `cargo clippy`。
+在工程根目录执行（统一使用 npm）：
 
-## 架构底线
-- **离线零外链**：前端产物使用相对路径，第三方库、图标与字体全部本地打包；运行时不得请求任何外部资源，外部 API 只能经宿主 `http` 代理访问。
-- **单一事实源**：同一业务实体的所有视图读写同一 `records` 集合，严禁按视图建表或保留本地副本。前端不直接持久化数据，一律经 `workbench.*` SDK 调用宿主。
-- **宿主兜底安全**：路径沙箱、事务一致性、凭据托管与权限校验只在宿主侧实现，不信任 WebView 传入的参数。
-- **简单优先**：不做过度设计或无依据的防御性设计；不增加无意义的 SHA 校验。保留契约明确要求的权限、路径、事务、图片类型与版本检查。
+```bash
+# 启动增量监听构建（修改源码自动编译产出至 web-workbench/dist/，驱动桌面窗口即时热刷新）
+npm run build:watch
 
+# 启动桌面宿主窗口（加载最新静态产物）
+npm start
+# 或直接双击运行 runner/tauri-host.exe
 
-## Sandbox 提权
+# 前端独立快速调试（Vite 开发服务器，端口 5173）
+npm run dev
 
-- 新增 Rust 依赖后，若 `cargo fetch` 因 Sandbox 无法解析或访问 `index.crates.io` / `static.crates.io`，停止同类重试，直接申请以 `require_escalated` 执行 `cargo fetch`（锁文件已更新时加 `--locked`）。该命令仅下载依赖并写入 Cargo 缓存及仓库锁文件，不运行项目或安装系统组件。2026-10-30 已遇到此 DNS 限制。
-- 依赖下载完成后，优先用 `cargo test --offline --locked`、`cargo clippy --offline --locked --all-targets -- -D warnings` 验证。本机 Cargo 分支强制把 `target` 重定向至 `F:\Runtime\Rust\.cargo\targets\`，并忽略 `CARGO_TARGET_DIR`、`--target-dir` 和 `build.target-dir`；2026-10-30 已验证其构建锁写入被 Sandbox 拒绝。因此涉及编译的 `cargo check/test/clippy/build` 可直接申请 `require_escalated`，不再尝试改写 target 路径；`cargo fmt` 仍在 Sandbox 内执行。提权仅用于开发构建、测试及缓存写入，不用于规避编译或测试失败。
-- 实际启动宿主会写入其受管应用配置目录（数据库、配置、附件与窗口记忆）。在当前仅允许写仓库的 Sandbox 中，运行 `npm run host:dev` 或本仓库构建的 `target/debug/tauri-host.exe --workspace <本仓库产物目录>` 时可为这些必要写入申请提权；窗口交互验证仅控制该工作台窗口。
+# 静态类型检查、ESLint 与代码格式检查
+npm run check
 
-# 文档的维护原则
+# 执行前端自动化回归测试（Vitest）
+npm run test
 
-> **注意**：以下原则**仅在进行文档创建、维护和修改时**生效并必须严格遵循，不适用于日常代码编写与常规开发任务。
+# 单次全量构建前端离线产物
+npm run build
+```
 
-## 风格
-文档坚持最小必要原则，但维持：
-- 语言的清晰易读，必须是自然流畅的人类自然语言。
-- 术语的专业，并且不仅限于名词。
-- 中文有歧义的时候可以使用英文术语。
+> **环境边界提示**：在纯浏览器环境（`npm run dev` 未连接桌面宿主）下，`useRecords` 会静默返回空数组 `{ data: [], loading: false, error: null }`；全量数据持久化、本地图片存取与窗口控制**必须在桌面宿主（`runner/tauri-host.exe`）中运行与验证**。
 
-## 结构
-遵循“根架构文档 + 共享设计文档 + 模块下钻文档”的分层设计文档体系。根文档负责全局导航、模块关系、依赖顺序和开发优先级；共享文档承载跨模块公共设计与架构约束；模块下钻文档只描述模块特有的职责边界、接口契约、架构关系、关键决策和验收口径，并引用共享规则。所有文档坚持最小必要信息原则，避免实现细节、代码、常识性内容、可推导内容和重复描述，从而实现 AI 开发中的上下文隔离、篇幅控制和信息去冗余。
+---
 
-## 修改
-**修改即重构**：需求或约束变化时，先找到管辖它的那一部分并改写；追加新条款是最后手段，需先确认无处可改。新增一条，就检查它是否让旧条失效——失效的删掉，重叠的合并，冲突以最新意图为准。堆砌出的补丁互相矛盾，比缺一条约束更伤。
+## 三、架构底线与开发规范（必须严格遵守）
 
-## 时机
-约束必须在行为发生之前记录，例如确定的spec，design。
-结果只在行为发生后记录，例如测试获得的结论。
+1. **离线零外链**：
+   - 所有第三方库、图标和字体必须本地打包，严禁在前端代码中引入外部 CDN 脚本、公网 Web 字体或未受管的外链媒体。外部 API 统一通过宿主安全代理发起。
+2. **单一事实源**：
+   - 同一业务实体（待办、日程、习惯、笔记等）在底层必须读写同一个 `collection` 集合，严禁在组件内部建立私有持久化副本或按视图重复建表。
+   - 所有数据变更必须通过 `workbench.records.*` 或 `useRecords` / `useAction` SDK 执行，保证多视图（列表、日历、看板、四象限等）同源同步。
+3. **外壳直角铺满**：
+   - 最外层应用外壳（`#workbench`）必须直角贴合窗口视口，整窗的圆角与边框裁剪由桌面宿主和操作系统统一接管。
+   - 严禁在页面外层另画整窗圆角或额外描边，避免产生黑边和双重边框。
+4. **CSS 语义主题令牌**：
+   - 颜色、背景、边框必须严格使用 CSS 语义变量（如 `var(--bg-surface)`、`var(--text-primary)`、`var(--border-subtle)` 等），确保深浅色主题无缝自适应切换。
+5. **容器查询（@container）自适应**：
+   - 组件布局优先依赖 `@container` 容器查询，使组件在窄侧栏（单列流）与宽面板（多列看板）之间平滑自适应，严禁依赖单一窗口宽度媒体查询。
 
-## 文档级规则
-如果文档本身有文档级别的规则，请严格遵守它。如果发生规则冲突，请让用户解决
+---
+
+## 四、Agent 标准 5 步作业流
+
+当接收到用户的定制工作台任务时，严格按照以下依赖顺序执行：
+
+1. **定义数据契约**：在 `src/types/` 或模块定义中声明 `collection` 名称与 TypeScript `Payload` 接口，确定核心字段。
+2. **接入数据与动作**：使用 `useRecords(collection)` 订阅数据流，使用 `workbench.records.*` 执行增删改查或原子批处理。
+3. **组装交互视图**：优先复用 `src/ui/` 中的六视图一体化组件（`MultiViewContainer`）、无头表格（`DataTable`）、日历（`CalendarView`）或统计图表。
+4. **样式与布局合规**：使用语义 Tokens 编写样式，利用 `@container` 实现宽窄形态自适应，检查滚动区域与空状态呈现。
+5. **注册模板与回归验证**：在 `src/templates/` 中装配模块并注册到模板列表，运行 `npm run check` 与 `npm run test` 确保无报错、构建产物正常刷新。
+
+---
+
+## 五、开发参考文档索引
+
+随本工程分发了完整的前端开发指南，位于 `web-workbench/docs/`：
+
+- 🧭 **[指南总览与 Agent 导航](web-workbench/docs/README.md)**：全局体系认知、Agent 作业拓扑与任务查阅索引。
+- 📐 **[运行时公共规范](web-workbench/docs/shared/workbench-runtime-and-conventions.md)**：离线零外链、单一事实源、状态同步、容器自适应与主题设计令牌。
+- 🔌 **[宿主开放能力与前端 SDK 契约](web-workbench/docs/modules/host-and-sdk-interfaces.md)**：`workbench.records` / `assets` / `config` / `window` / `backup` 接口详解与 React Hooks。
+- 🧩 **[前端可复用控件与多视图引擎](web-workbench/docs/modules/reusable-ui-and-views.md)**：基础原语、六视图组件、无头表格、日历与统计图表用法。
+- 🏗️ **[业务模块组装与工作台模板扩展](web-workbench/docs/modules/custom-modules-and-templates.md)**：参考模块结构剖析与 12 大业务域扩展模式。
+- 🖼️ **[工作台内容布局规范](web-workbench/docs/content-layout.md)**：外壳直角铺满、滚动区域分配与外观回归验收基准。
