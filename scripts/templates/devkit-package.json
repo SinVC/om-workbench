@@ -2,9 +2,7 @@
   "name": "om-workbench-devkit",
   "private": true,
   "type": "module",
-  "workspaces": [
-    "web-workbench"
-  ],
+  "workspaces": ["web-workbench"],
   "engines": {
     "node": ">=22.12"
   },

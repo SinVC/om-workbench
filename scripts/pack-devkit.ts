@@ -52,8 +52,12 @@ function copyDirectory(source: string, target: string, ignoreNames: Set<string> 
 function resolveRunnerBinary(): string | null {
   const candidates = [
     path.join(ROOT_DIR, 'runner', 'tauri-host.exe'),
+    path.join(ROOT_DIR, 'runner', 'OM Workbench.exe'),
     path.join(ROOT_DIR, 'target', 'release', 'tauri-host.exe'),
+    path.join(ROOT_DIR, 'target', 'release', 'OM Workbench.exe'),
+    path.join(ROOT_DIR, 'target', 'release', 'om-workbench.exe'),
     path.join(ROOT_DIR, 'target', 'debug', 'tauri-host.exe'),
+    path.join(ROOT_DIR, 'target', 'debug', 'OM Workbench.exe'),
   ];
 
   for (const candidate of candidates) {
@@ -96,10 +100,10 @@ async function main(): Promise<void> {
       log(`Copied host runner to ${runnerDest}`);
     } else {
       console.warn(
-        '\n[WARNING] No precompiled tauri-host.exe found in runner/, target/release/ or target/debug/!'
+        '\n[WARNING] No precompiled tauri-host.exe found in runner/, target/release/ or target/debug/!',
       );
       console.warn(
-        'Please build the host first via "npm run host:build" or provide --skip-runner to test frontend packaging only.\n'
+        'Please build the host first via "npm run host:build" or provide --skip-runner to test frontend packaging only.\n',
       );
     }
   } else {
@@ -211,7 +215,7 @@ async function main(): Promise<void> {
     log('Fallback to PowerShell Compress-Archive...');
     execSync(
       `powershell -NoProfile -Command "Compress-Archive -Path '${STAGING_DIR}\\*' -DestinationPath '${ZIP_PATH}' -Force"`,
-      { stdio: 'inherit' }
+      { stdio: 'inherit' },
     );
   }
 
